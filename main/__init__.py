@@ -2,6 +2,7 @@ import json
 import requests
 import time
 import urllib
+from subprocess import call
 
 TOKEN = "453908741:AAHbiAayPq5cQPEitEw5SHIoAWyxmVD48BM"
 URL = "https://api.telegram.org/bot{}/".format(TOKEN)
@@ -53,9 +54,41 @@ def echo_all(updates):
         try:
             text = update["message"]["text"]
             chat = update["message"]["chat"]["id"]
+            text = handle_command(text)
             send_message(text, chat)
         except Exception as e:
             print(e)
+
+
+def handle_command(text):
+    parts = text.split(" ")
+    if text[0] == '/':
+        if len(parts) != 2:
+            return "Invalid Command format"
+        else:
+            command = text[1:]
+            if command.split(" ")[0] == "setVolume":
+                value, result = int_try_parse(command.split(" ")[1])
+                if result:
+                    set_volume(value)
+                else:
+                    return "Wrong value. Should be 0 - 100"
+                return "Volume set to {}".format(value)
+            else:
+                return "Unknown Command {}".format(command.split(" ")[0])
+    else:
+        return text
+
+
+def int_try_parse(value):
+    try:
+        return int(value), True
+    except ValueError:
+        return value, False
+
+
+def set_volume(value):
+    call(["amixer", "-D", "pulse", "sset", "Master", str(value) + "%"])
 
 
 def main():

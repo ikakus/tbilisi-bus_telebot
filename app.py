@@ -2,9 +2,10 @@ import json
 import requests
 import time
 import urllib
-from subprocess import call
 
-TOKEN = "453908741:AAHbiAayPq5cQPEitEw5SHIoAWyxmVD48BM"
+from tbilisibus.tbilisi_bus_main import get_table_for_id
+
+TOKEN = "517569607:AAE1Q2woGulXkPgufvqB5gZuJYPeKMOu8u4"
 URL = "https://api.telegram.org/bot{}/".format(TOKEN)
 
 
@@ -60,24 +61,24 @@ def echo_all(updates):
             print(e)
 
 
-def handle_command(text):
-    parts = text.split(" ")
-    if text[0] == '/':
-        if len(parts) != 2:
-            return "Invalid Command format"
-        else:
-            command = text[1:]
-            if command.split(" ")[0] == "setVolume":
-                value, result = int_try_parse(command.split(" ")[1])
-                if result:
-                    set_volume(value)
-                else:
-                    return "Wrong value. Should be 0 - 100"
-                return "Volume set to {}".format(value)
-            else:
-                return "Unknown Command {}".format(command.split(" ")[0])
+def get_bus_stop_info(id):
+    str_result = ""
+    infos = get_table_for_id(id)
+    if infos.__len__() > 0:
+        for info in infos:
+            str_result + info + "\n"
     else:
-        return text
+        str_result = "Invalid bus stop ID"
+
+    return str_result
+
+
+def handle_command(text):
+    value, result = int_try_parse(text)
+    if result:
+        return get_bus_stop_info(value)
+    else:
+        return "Wrong value. Should be ID of stop (eg. 994)"
 
 
 def int_try_parse(value):
@@ -85,10 +86,6 @@ def int_try_parse(value):
         return int(value), True
     except ValueError:
         return value, False
-
-
-def set_volume(value):
-    call(["amixer", "-D", "pulse", "sset", "Master", str(value) + "%"])
 
 
 def main():

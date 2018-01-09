@@ -66,7 +66,8 @@ def get_bus_stop_info(id):
     infos = get_table_for_id(id)
     if infos.__len__() > 0:
         for info in infos:
-            str_result + info + "\n"
+            bus_str = str(info)
+            str_result += bus_str + "\n"
     else:
         str_result = "Invalid bus stop ID"
 

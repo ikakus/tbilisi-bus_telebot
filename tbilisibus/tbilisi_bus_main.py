@@ -10,7 +10,3 @@ def get_table_for_id(id):
     response = requests.get(url)
     result = parse_table(response.content)
     return result
-
-
-res = get_table_for_id(11)
-print(res)

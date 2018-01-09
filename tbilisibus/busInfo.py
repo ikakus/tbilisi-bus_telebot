@@ -5,7 +5,7 @@ class BusInfo:
         self.time = time
 
     def __str__(self):
-        return self.route + " | " + self.text + " --  " + self.time + "min."
+        return self.route + " | " + self.text + " --  " + self.time + " min."
 
     def __repr__(self):
         return self.__str__()

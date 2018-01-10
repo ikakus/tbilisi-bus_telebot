@@ -75,7 +75,7 @@ def get_bus_stop_info(id):
 
 
 def handle_command(text):
-    if text[1:] is not "/":
+    if text[0] != "/":
         value, result = int_try_parse(text)
         if result:
             return get_bus_stop_info(value)

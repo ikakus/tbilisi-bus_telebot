@@ -75,11 +75,12 @@ def get_bus_stop_info(id):
 
 
 def handle_command(text):
-    value, result = int_try_parse(text)
-    if result:
-        return get_bus_stop_info(value)
-    else:
-        return "Wrong value. Should be ID of stop (eg. 994)"
+    if text[1:] is not "/":
+        value, result = int_try_parse(text)
+        if result:
+            return get_bus_stop_info(value)
+        else:
+            return "Wrong value. Should be ID of stop (eg. 994)"
 
 
 def int_try_parse(value):
